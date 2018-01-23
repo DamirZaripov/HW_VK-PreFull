@@ -77,12 +77,10 @@ class NewsTableViewCell: UITableViewCell {
         
         nameLabel.text = user.name
         surnameLabel.text = user.surname
+      
+        dataLabel.text = toStringDate(from: newsModel.date)
         
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd/MMM/yyyy hh:mm:ss"
-        //let dateString = dateFormatter.string(from: newsModel.date)
-        dataLabel.text = "dateString"
-    
+        checkLike()
         likeButton.setTitle("\(newsModel.numberOfLikes)", for: .normal)
         commentButton.setTitle("\(newsModel.numberOfComments)", for: .normal)
         repostButton.setTitle("\(newsModel.numberOfReposts)", for: .normal)
@@ -128,5 +126,35 @@ class NewsTableViewCell: UITableViewCell {
             }
         }
         
+    }
+    
+    func checkLike() {
+        
+        RequestManager.instance.isLiked(itemId: self.id) { (isLiked) in
+            let checkLiked = isLiked.response.liked
+    
+            if checkLiked == 0 {
+                DispatchQueue.main.async {
+                        self.likeButton.setImage(self.imageNotLike, for: .normal)
+                    }
+            } else {
+                DispatchQueue.main.async {
+                        self.likeButton.setImage(self.imageIslike, for: .normal)
+                }
+            }
+        }
+    }
+    
+    func toStringDate(from date: Int) -> String {
+        
+        let timeInterval = Double(date)
+        let myDate = Date(timeIntervalSince1970: timeInterval)
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        let myString = formatter.string(from: myDate)
+        let yourDate = formatter.date(from: myString)
+        formatter.dateFormat = "dd-MMM-yyyy"
+        let stringDate = formatter.string(from: yourDate!)
+        return stringDate
     }
 }

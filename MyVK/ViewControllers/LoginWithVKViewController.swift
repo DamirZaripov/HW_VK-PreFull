@@ -12,7 +12,7 @@ class LoginWithVKViewController: UIViewController, UIWebViewDelegate {
 
     @IBOutlet weak var webView: UIWebView!
     
-    let client_id = "6343236"
+    let client_id = "6344186"
     
     override func viewDidLoad() {
         super.viewDidLoad()
