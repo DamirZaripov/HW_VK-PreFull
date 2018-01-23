@@ -121,8 +121,8 @@ class NewViewController: UITableViewController, DataTransferProtocol, UICollecti
     }
     
     func setInfo(for user: User) {
-        //avatarImageView.image = user.avatar
-        nameNavigationItem.title = "check"
+        avatarImageView.image = user.avatar
+        nameNavigationItem.title = user.name
         nameLabel.text = user.name
         surnameLabel.text = user.surname
         ageLabel.text = String(user.age) + years

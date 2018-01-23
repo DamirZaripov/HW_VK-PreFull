@@ -49,13 +49,7 @@ class LoginWithVKViewController: UIViewController, UIWebViewDelegate {
             RequestManager.instance.tokenKey = token
             RequestManager.instance.user_id = user_id
             
-            print(token)
-            print(user_id)
-            
             RequestManager.instance.getUser(compitionBlock: { (user) in
-                
-                print("check user data")
-                print(String(describing: user))
                 
                 let storyboard = UIStoryboard(name: "Main", bundle: nil)
                 let pageNVC = storyboard.instantiateViewController(withIdentifier: "mainNVC") as! UINavigationController
