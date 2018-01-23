@@ -28,7 +28,11 @@ class NewsTableViewCell: UITableViewCell {
     @IBOutlet weak var constraintAvatarToText: NSLayoutConstraint!
     @IBOutlet weak var constraintAvatarToImage: NSLayoutConstraint!
     
-   override func awakeFromNib() {
+    var id: Int = 0
+    let imageIslike = UIImage(named: "isLikedImage")
+    let imageNotLike = UIImage(named: "notLike")
+    
+    override func awakeFromNib() {
         super.awakeFromNib()
         nameLabel.text = ""
         surnameLabel.text = ""
@@ -63,6 +67,8 @@ class NewsTableViewCell: UITableViewCell {
             constraintAvatarToText.priority = .defaultHigh
         }
         
+        id = newsModel.id
+        
         textInNewsLabel.text = newsModel.text
         
         if let imageURL = newsModel.image {
@@ -76,7 +82,7 @@ class NewsTableViewCell: UITableViewCell {
         dateFormatter.dateFormat = "dd/MMM/yyyy hh:mm:ss"
         //let dateString = dateFormatter.string(from: newsModel.date)
         dataLabel.text = "dateString"
-        
+    
         likeButton.setTitle("\(newsModel.numberOfLikes)", for: .normal)
         commentButton.setTitle("\(newsModel.numberOfComments)", for: .normal)
         repostButton.setTitle("\(newsModel.numberOfReposts)", for: .normal)
@@ -88,4 +94,39 @@ class NewsTableViewCell: UITableViewCell {
         setNeedsLayout()
     }
     
+    @IBAction func likeButtonPressed(_ sender: UIButton) {
+        
+        RequestManager.instance.isLiked(itemId: self.id) { (isLiked) in
+            
+            let checkLiked = isLiked.response.liked
+            
+            if checkLiked == 0 {
+                
+                RequestManager.instance.addLike(itemId: self.id, complitionBlock: { (likes) in
+                    
+                    let likes = likes.response.likes
+                    
+                    DispatchQueue.main.async {
+                        self.likeButton.setTitle("\(likes)", for: .normal)
+                        self.likeButton.setImage(self.imageIslike, for: .normal)
+                    }
+                    
+                })
+            
+            } else {
+                
+                RequestManager.instance.deleteLike(itemId: self.id, complitionBlock: { (likes) in
+                    
+                    let likes = likes.response.likes
+                    
+                    DispatchQueue.main.async {
+                        self.likeButton.setTitle("\(likes)", for: .normal)
+                        self.likeButton.setImage(self.imageNotLike, for: .normal)
+                    }
+                })
+                
+            }
+        }
+        
+    }
 }

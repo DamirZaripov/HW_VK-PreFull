@@ -56,7 +56,7 @@
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fOR-hK-53T">
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fOR-hK-53T">
                         <rect key="frame" x="16" y="232" width="67" height="20"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="20" id="OAt-Vq-e4g"/>
@@ -64,9 +64,12 @@
                         </constraints>
                         <inset key="titleEdgeInsets" minX="0.0" minY="0.0" maxX="-3" maxY="0.0"/>
                         <inset key="imageEdgeInsets" minX="-3" minY="1" maxX="2" maxY="1"/>
-                        <state key="normal" title="10" image="icon-like">
+                        <state key="normal" title="10" image="notLike">
                             <color key="titleColor" red="0.20922102249999999" green="0.1035774579" blue="0.2597070313" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         </state>
+                        <connections>
+                            <action selector="likeButtonPressed:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="gcK-ZO-jKw"/>
+                        </connections>
                     </button>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zkb-6o-iuV">
                         <rect key="frame" x="91" y="232" width="36" height="20"/>
@@ -135,8 +138,8 @@
     <resources>
         <image name="fcrk-1" width="604" height="403"/>
         <image name="icon-comment" width="20" height="20"/>
-        <image name="icon-like" width="20" height="20"/>
         <image name="icon-repost" width="20" height="20"/>
+        <image name="notLike" width="20" height="20"/>
         <image name="test-avatar" width="639" height="636"/>
     </resources>
 </document>

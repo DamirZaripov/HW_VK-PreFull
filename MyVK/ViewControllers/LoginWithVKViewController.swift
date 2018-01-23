@@ -48,6 +48,8 @@ class LoginWithVKViewController: UIViewController, UIWebViewDelegate {
             guard let token = data?[1] else { return }
             guard let user_id = data?[5] else { return }
             
+            print(token)
+            
             RequestManager.instance.tokenKey = token
             RequestManager.instance.user_id = user_id
             

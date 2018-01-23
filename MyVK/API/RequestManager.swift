@@ -95,4 +95,82 @@ class RequestManager {
             }
         }.resume()
     }
+    
+    func isLiked(itemId: Int, complitionBlock: @escaping (IsLiked) -> ()) {
+        
+        guard let url = URL(string: "https://api.vk.com/method/likes.isLiked?user_id=\(user_id)&type=post&owner_id=\(user_id)&item_id=\(itemId)&access_token=\(tokenKey)&v=\(apiVersion)") else  { return }
+
+        let session = URLSession.shared
+        session.dataTask(with: url) { (data, response, error) in
+            
+            if (error != nil) {
+                print("Error: \(String(describing: error?.localizedDescription))")
+            } else {
+                guard let data = data else { return }
+                do {
+                    let isLiked = try JSONDecoder().decode(IsLiked.self, from: data)
+                    print(String(describing: isLiked))
+                    complitionBlock(isLiked)
+                } catch let errorMessage {
+                    print(errorMessage.localizedDescription)
+                }
+            }
+        }.resume()
+    }
+    
+    func addLike(itemId: Int, complitionBlock: @escaping (Likes) -> ()) {
+        
+        guard let url = URL(string: "https://api.vk.com/method/likes.add?owner_id=\(user_id)&type=post&item_id=\(itemId)&access_token=\(tokenKey)&v=\(apiVersion)") else { return }
+        
+        let parameters = [""]
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        
+        guard let httpBody = try? JSONSerialization.data(withJSONObject: parameters, options: []) else { return }
+        request.httpBody = httpBody
+        
+        let session = URLSession.shared
+        session.dataTask(with: request) { (data, response, error) in
+            
+            if (error != nil) {
+                print("Error: \(String(describing: error?.localizedDescription))")
+            } else {
+                guard let data = data else { return }
+                do {
+                    let likes = try JSONDecoder().decode(Likes.self, from: data)
+                    complitionBlock(likes)
+                } catch let errorMessage {
+                    print(errorMessage.localizedDescription)
+                }
+            }
+        }.resume()
+    }
+    
+    func deleteLike(itemId: Int, complitionBlock: @escaping (Likes) -> ()) {
+        
+        guard let url = URL(string: "https://api.vk.com/method/likes.delete?owner_id=\(user_id)&type=post&item_id=\(itemId)&access_token=\(tokenKey)&v=\(apiVersion)") else { return }
+
+        let parameters = [""]
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        
+        guard let httpBody = try? JSONSerialization.data(withJSONObject: parameters, options: []) else { return }
+        request.httpBody = httpBody
+        
+        let session = URLSession.shared
+        session.dataTask(with: request) { (data, response, error) in
+            
+            if (error != nil) {
+                print("Error: \(String(describing: error?.localizedDescription))")
+            } else {
+                guard let data = data else { return }
+                do {
+                    let likes = try JSONDecoder().decode(Likes.self, from: data)
+                    complitionBlock(likes)
+                } catch let errorMessage {
+                    print(errorMessage.localizedDescription)
+                }
+            }
+            }.resume()
+    }
 }
