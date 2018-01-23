@@ -11,14 +11,16 @@ import CoreData
 
 class News {
 
-    let date: Date
-    let text: String?
-    let image: UIImage?
+    let id: Int
+    let date: Int
+    let text: String
+    let image: String?
     let numberOfLikes: Int
     let numberOfComments: Int
     let numberOfReposts: Int
     
-    init(date: Date, text: String?, image: UIImage?, numberOfLikes: Int, numberOfComments: Int, numberOfReposts: Int) {
+    init(id: Int, date: Int, text: String, image: String?, numberOfLikes: Int, numberOfComments: Int, numberOfReposts: Int) {
+        self.id = id
         self.date = date
         self.text = text
         self.image = image
@@ -27,31 +29,31 @@ class News {
         self.numberOfReposts = numberOfReposts
     }
     
-    convenience init(from newsCD: NewsCD) {
-        var image: UIImage?
-        if let imageDataFromCD = newsCD.image {
-            image = UIImage(data: imageDataFromCD)
-        }
-        
-        self.init(date: newsCD.date, text: newsCD.text, image: image , numberOfLikes: Int(newsCD.numberOfLikes), numberOfComments: Int(newsCD.numberOfComments), numberOfReposts: Int(newsCD.numberOfReposts))
-    }
-    
-    func convertToNewsCD(in context: NSManagedObjectContext) -> NSManagedObject {
-        let news = NewsCD(context: context)
-        news.date = date
-        news.numberOfComments = Int16(numberOfComments)
-        news.numberOfLikes = Int16(numberOfLikes)
-        news.numberOfReposts = Int16(numberOfReposts)
-        news.text = text
-        
-        var imageData: Data?
-        if let image = image {
-            if let convertedImageToData = UIImageJPEGRepresentation(image, 1.0) {
-                imageData = convertedImageToData
-            }
-        }
-        news.image = imageData
-        return news
-    }
+//    convenience init(from newsCD: NewsCD) {
+//        var image: UIImage?
+//        if let imageDataFromCD = newsCD.image {
+//            image = UIImage(data: imageDataFromCD)
+//        }
+//
+//        self.init(date: newsCD.date, text: newsCD.text, image: image , numberOfLikes: Int(newsCD.numberOfLikes), numberOfComments: Int(newsCD.numberOfComments), numberOfReposts: Int(newsCD.numberOfReposts))
+//    }
+//
+//    func convertToNewsCD(in context: NSManagedObjectContext) -> NSManagedObject {
+//        let news = NewsCD(context: context)
+//        news.date = date
+//        news.numberOfComments = Int16(numberOfComments)
+//        news.numberOfLikes = Int16(numberOfLikes)
+//        news.numberOfReposts = Int16(numberOfReposts)
+//        news.text = text
+//
+//        var imageData: Data?
+//        if let image = image {
+//            if let convertedImageToData = UIImageJPEGRepresentation(image, 1.0) {
+//                imageData = convertedImageToData
+//            }
+//        }
+//        news.image = imageData
+//        return news
+//    }
     
 }

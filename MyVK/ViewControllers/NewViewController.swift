@@ -28,7 +28,6 @@ class NewViewController: UITableViewController, DataTransferProtocol, UICollecti
     @IBOutlet weak var photoCollectionView: UICollectionView!
     var user: User!
     var photoArray = [UIImage(named: "fcrk-1"),UIImage(named: "fcrk-2"),UIImage(named: "fcrk-3"), UIImage(named: "fcrk-1"), UIImage(named: "fcrk-1"),UIImage(named: "fcrk-2"),UIImage(named: "fcrk-3"), UIImage(named: "fcrk-1")]
-    var news = [News]()
     let newsTestImageArray = [UIImage(named: "fcrk-4")!, UIImage(named: "fcrk-5")!, UIImage(named: "fcrk-6")!]
     let types: [InfoType] = [.friends, .followers, .groups, .photos, .videos, .audios, .gifts, .docs]
     
@@ -56,15 +55,15 @@ class NewViewController: UITableViewController, DataTransferProtocol, UICollecti
     let newsCellClass = "NewsTableViewCell"
     let estimatedNewsCellHeight: CGFloat = 100
     var userEmail = ""
-    var newsManager: NewsManager!
     let currentUserKey = "currentUserKey"
     var userWithAuthorization: UserWithAuthorization!
+    var newsFromVK: [News] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        newsManager = NewsManager()
         setNavigationBarColorAndFont()
         user = createUser(with: userWithAuthorization)
+        loadNewsFromVK()
         setInfo(for: user)
         roundImage(for: avatarImageView)
         changeBorder(for: addPhotoButton)
@@ -73,7 +72,6 @@ class NewViewController: UITableViewController, DataTransferProtocol, UICollecti
         cellRegistration()
         prepareForDynamicCellSize()
         createRefreshControl()
-        loadNews()
     }
     
     func prepareForDynamicCellSize() {
@@ -92,8 +90,32 @@ class NewViewController: UITableViewController, DataTransferProtocol, UICollecti
         view.layer.borderColor = borderColour
     }
     
-    func loadNews() {
-        news = newsManager.getNews() ?? [News]()
+    func loadNewsFromVK() {
+        
+        RequestManager.instance.getNews { (myNews) in
+            
+            for news in myNews.response.items {
+                
+                var imageURL = ""
+                
+                if let url = news.attachments?.first?.photo?.photo_130 {
+                    imageURL = url
+                }
+                
+                let newNews = News(id: news.id,
+                                   date: news.date,
+                                   text: news.text,
+                                   image: imageURL,
+                                   numberOfLikes: news.likes.count,
+                                   numberOfComments: news.comments.count,
+                                   numberOfReposts: news.reposts.count)
+                
+                self.newsFromVK.append(newNews)
+            }
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
     }
     
     //MARK: - Refresh
@@ -105,7 +127,8 @@ class NewViewController: UITableViewController, DataTransferProtocol, UICollecti
     }
     
     @objc private func refresh() {
-        loadNews()
+        newsFromVK.removeAll()
+        loadNewsFromVK()
         self.tableView.reloadData()
         self.refreshControl?.endRefreshing()
     }
@@ -122,7 +145,7 @@ class NewViewController: UITableViewController, DataTransferProtocol, UICollecti
     
     func setInfo(for user: User) {
         avatarImageView.image = user.avatar
-        nameNavigationItem.title = user.name
+        nameNavigationItem.title = user.name 
         nameLabel.text = user.name
         surnameLabel.text = user.surname
         ageLabel.text = String(user.age) + years
@@ -149,14 +172,13 @@ class NewViewController: UITableViewController, DataTransferProtocol, UICollecti
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return news.count
+        return newsFromVK.count
         
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellNewsIdentifier) as! NewsTableViewCell
-        let reverseNews: [News] = news.reversed()
-        let newsModel = reverseNews[indexPath.row]
+        let newsModel = newsFromVK[indexPath.row]
         cell.prepare(with: newsModel, and: user)
         return cell
     }
@@ -177,24 +199,6 @@ class NewViewController: UITableViewController, DataTransferProtocol, UICollecti
     
     func didPressDone(with note: String) {
         
-        let currentDateTime = Date()
-        
-        let newNews = News (date: currentDateTime,
-                            text: note,
-                            image: newsTestImageArray[Int(arc4random_uniform(UInt32(newsTestImageArray.count)))],
-                            numberOfLikes: newsTestLikesArray[Int(arc4random_uniform(UInt32(newsTestLikesArray.count)))],
-                            numberOfComments: newsTestCommentsArray[Int(arc4random_uniform(UInt32(newsTestCommentsArray.count)))],
-                            numberOfReposts: newsTestRepostsArray[Int(arc4random_uniform(UInt32(newsTestRepostsArray.count)))])
-
-        newsManager.asynSave(with: newNews) { [weak self] (isSaved) in
-            guard let strongSelf = self else {return}
-            if (isSaved) {
-                strongSelf.news.append(newNews)
-                DispatchQueue.main.async {
-                    strongSelf.tableView.reloadData()
-                }
-            }
-        }
     }
 
     //MARK: - Collection View Methods

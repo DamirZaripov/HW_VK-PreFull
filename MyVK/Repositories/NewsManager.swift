@@ -15,6 +15,7 @@ class NewsManager: DataManager {
         guard let newsSet = UserManager.currentUser?.news else { return nil }
         var news = Array(newsSet)
         news = news.sorted(by: { $0.date < $1.date })
-        return news.map { News(from: $0)}
+        //return news.map { News(from: $0)}
+        return nil
     }
 }

@@ -44,14 +44,14 @@ class DataManager: ManagerProtocol {
             }
         }
         
-        if (NSStringFromClass(T.self).components(separatedBy: ".")[1] == classNews) {
-            let news = obj as? News
-            let contex = CoreDataManager.instance.persistentContainer.viewContext
-            let newsCD = news?.convertToNewsCD(in: contex)
-            UserManager.currentUser?.addToNews(newsCD as! NewsCD)
-            CoreDataManager.instance.saveContext()
-            isSaved = true
-        }
+//        if (NSStringFromClass(T.self).components(separatedBy: ".")[1] == classNews) {
+//            let news = obj as? News
+//            let contex = CoreDataManager.instance.persistentContainer.viewContext
+//            let newsCD = news?.convertToNewsCD(in: contex)
+//            UserManager.currentUser?.addToNews(newsCD as! NewsCD)
+//            CoreDataManager.instance.saveContext()
+//            isSaved = true
+//        }
         
         return isSaved
     }

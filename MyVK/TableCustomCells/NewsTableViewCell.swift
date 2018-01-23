@@ -39,16 +39,7 @@ class NewsTableViewCell: UITableViewCell {
     
     func prepare(with newsModel: News, and user: User) {
         
-        let textIsEmpty = newsModel.text == nil
-        
-        if textIsEmpty, newsModel.image != nil {
-            textInNewsLabel.isHidden = true
-            newsImageView.isHidden = false
-            constraintAvatarToText.priority = .defaultLow
-            constraintAvatarToImage.priority = .defaultHigh
-        }
-        
-        if !textIsEmpty, newsModel.image != nil {
+        if newsModel.image != nil {
             textInNewsLabel.isHidden = false
             constraintAvatarToImage.priority = .defaultLow
             constraintAvatarToText.priority = .defaultHigh
@@ -58,24 +49,28 @@ class NewsTableViewCell: UITableViewCell {
             constraintTextToImage.priority = .defaultHigh
         }
         
-        if !textIsEmpty, newsModel.image == nil {
+        if newsModel.image == nil {
             newsImageView?.isHidden = true
             textInNewsLabel.isHidden = false
-            //constraintAvatarToText.priority = UILayoutPriority(rawValue: 999)
             constraintTextToImage.priority = .defaultLow
             constraintTextToLike.priority = .defaultHigh
-            //constraintLikeToBottom.priority = .defaultLow
+            constraintAvatarToImage.priority = .defaultLow
+            constraintAvatarToText.priority = .defaultHigh
         }
         
         textInNewsLabel.text = newsModel.text
-        newsImageView.image = newsModel.image
+        
+        if let imageURL = newsModel.image {
+            newsImageView.downloadedFrom(link: imageURL)
+        }
+        
         nameLabel.text = user.name
         surnameLabel.text = user.surname
         
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd/MMM/yyyy hh:mm:ss"
-        let dateString = dateFormatter.string(from: newsModel.date)
-        dataLabel.text = dateString
+        //let dateString = dateFormatter.string(from: newsModel.date)
+        dataLabel.text = "dateString"
         
         likeButton.setTitle("\(newsModel.numberOfLikes)", for: .normal)
         commentButton.setTitle("\(newsModel.numberOfComments)", for: .normal)

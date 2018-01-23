@@ -12,12 +12,14 @@ class LoginWithVKViewController: UIViewController, UIWebViewDelegate {
 
     @IBOutlet weak var webView: UIWebView!
     
-    let urlVK = "https://oauth.vk.com/authorize?client_id=6342844&display=page&redirect_uri=https://oauth.vk.com/blank.html&scope=friends&response_type=token&v=5.52"
+    let client_id = "6343236"
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.webView.delegate = self
-        guard let url = URL(string: urlVK) else { return }
+        
+        
+        guard let url = URL(string: "https://oauth.vk.com/authorize?client_id=\(client_id))&display=page&redirect_uri=https://oauth.vk.com/blank.html&scope=friends,wall&response_type=token&v=5.52") else { return }
         let request = URLRequest(url: url)
         let session = URLSession.shared
         
