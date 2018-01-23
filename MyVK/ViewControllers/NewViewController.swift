@@ -92,6 +92,7 @@ class NewViewController: UITableViewController, DataTransferProtocol, UICollecti
     
     func loadNewsFromVK() {
         
+        newsFromVK.removeAll()
         RequestManager.instance.getNews { (myNews) in
             
             for news in myNews.response.items {
@@ -127,7 +128,6 @@ class NewViewController: UITableViewController, DataTransferProtocol, UICollecti
     }
     
     @objc private func refresh() {
-        newsFromVK.removeAll()
         loadNewsFromVK()
         self.tableView.reloadData()
         self.refreshControl?.endRefreshing()
@@ -179,6 +179,7 @@ class NewViewController: UITableViewController, DataTransferProtocol, UICollecti
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellNewsIdentifier) as! NewsTableViewCell
         let newsModel = newsFromVK[indexPath.row]
+        cell.prepareForReuse()
         cell.prepare(with: newsModel, and: user)
         return cell
     }
@@ -199,6 +200,9 @@ class NewViewController: UITableViewController, DataTransferProtocol, UICollecti
     
     func didPressDone(with note: String) {
         
+        RequestManager.instance.postNews(message: note) { (check) in
+            self.loadNewsFromVK()
+        }
     }
 
     //MARK: - Collection View Methods

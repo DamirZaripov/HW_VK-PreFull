@@ -76,7 +76,7 @@ class RequestManager {
     
     func postNews(message: String, complitionBlock: @escaping (Bool) ->()) {
         
-        guard let url = URL(string: "https://api.vk.com/method/wall.post?user_ids=\(user_id)&messagge=\(message)&access_token=\(tokenKey)&v=\(apiVersion)") else { return }
+        guard let url = URL(string: "https://api.vk.com/method/wall.post?user_ids=\(user_id)&message=\(message)&access_token=\(tokenKey)&v=\(apiVersion)") else { return }
         
         let parameters = [""]
         var request = URLRequest(url: url)

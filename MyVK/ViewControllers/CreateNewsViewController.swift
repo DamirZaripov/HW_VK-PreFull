@@ -30,7 +30,6 @@ class CreateNewsViewController: UIViewController, UITextViewDelegate {
     
     @IBAction func createNewsButtonPressed(_ sender: Any) {
         guard let note = newsTextView.text else { return }
-        RequestManager.postNews(<#T##RequestManager#>)
         dataTransferDelagete?.didPressDone(with: note)
         dismiss(animated: true, completion: nil)
     }

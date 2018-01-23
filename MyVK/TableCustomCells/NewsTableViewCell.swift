@@ -37,6 +37,11 @@ class NewsTableViewCell: UITableViewCell {
         textInNewsLabel.text = ""
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        newsImageView.image = nil
+    }
+     
     func prepare(with newsModel: News, and user: User) {
         
         if newsModel.image != nil {
